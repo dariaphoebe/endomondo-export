@@ -41,16 +41,19 @@ class Activity:
 class Writer:
 
     TCD_NAMESPACE = "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"
-    XML_SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance"
-
+    NS_MAP = {
+            "ns2": "http://www.garmin.com/xmlschemas/UserProfile/v2",
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            "ns4": "http://www.garmin.com/xmlschemas/ProfileExtension/v1",
+            "ns5": "http://www.garmin.com/xmlschemas/ActivityGoals/v1",
+            "tpx": "http://www.garmin.com/xmlschemas/ActivityExtension/v2",
+            None: "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2",
+            }
+            
     def create_element(self, parent, tag, text=None):
         tag = "{%s}%s" % (self.TCD_NAMESPACE, tag)
 
-        nsmap = {
-            None: self.TCD_NAMESPACE,
-            "xsi": self.XML_SCHEMA_NAMESPACE,
-        }
-        element = lxml.etree.Element(tag, nsmap=nsmap)
+        element = lxml.etree.Element(tag, nsmap=self.NS_MAP)
 
         if text:
             element.text = text
@@ -126,7 +129,6 @@ class Writer:
 
     def create_document(self, activity):
         document = self.create_element(None, "TrainingCenterDatabase")
-        document.set("{%s}schemaLocation" % self.XML_SCHEMA_NAMESPACE, "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd")
 
         document = lxml.etree.ElementTree(document)
         element = self.create_element(document.getroot(), "Activities")
