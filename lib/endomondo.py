@@ -91,9 +91,11 @@ class Endomondo:
     os_version = "2.2"
     model = "M"
 
-    def __init__(self, email=None, password=None, initial_delay=0, max_delay=30):
+    def __init__(self, email=None, password=None, initial_delay=0, max_delay=30, proxy=''):
         self.auth_token = None
         self.request = requests.session()
+        if proxy:
+            self.request.proxies = {"http": proxy, "https": proxy}
         self.request.headers['User-Agent'] = self.get_user_agent()
         self.delay = initial_delay
         self.max_delay = max_delay
