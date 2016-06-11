@@ -211,13 +211,27 @@ class Endomondo:
             return self.parse_json(r)
         return r
 
-    def get_workouts(self, max_results=40):
-        """Get the most recent workouts"""
+    def get_workouts(self, before, max_results=40):
         if not max_results:
             max_results = 100000000
 
-        json = self.call('api/workout/list', 'json',
-                        {'maxResults': max_results})
+        """Get the most recent workouts"""
+        wparams = {
+            'maxResults': max_results
+        }
+
+        if before != None:
+            if type(before) is datetime:
+                if before.tzinfo != None:
+                    before = before.astimezone(tzinfo('UTC'))
+
+                    wparams['before'] = before.strftime('%Y-%m-%d %H:%M:%S UTC')
+                elif type(before) is str:
+                    wparams['before'] = before
+                else:
+                    raise ValueError("param 'before needs to be datetime object or iso formatted string.")
+
+        json = self.call('api/workout/list', 'json', wparams)
         return [EndomondoWorkout(self, w) for w in json]
 
 

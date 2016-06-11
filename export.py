@@ -52,9 +52,10 @@ def main():
         email = raw_input("Email: ")
         password = getpass.getpass()
         maximum_workouts = raw_input("Maximum number of workouts (press Enter to ignore)")
+        before = raw_input("Workouts before date (seconds timestamp or datestring e.g. 1969-12-31 11:59:59 UTC) (press Enter to ignore)")
         endomondo = Endomondo(email, password)
 
-        workouts = endomondo.get_workouts(maximum_workouts)
+        workouts = endomondo.get_workouts(before, maximum_workouts)
         print "fetched latest", len(workouts), "workouts"
         for workout in workouts:
             create_tcx_file(workout)
