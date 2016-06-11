@@ -9,8 +9,12 @@ import datetime
 from time import sleep
 
 
+# if you used the endomondo route editor, you could have bogus times
 def to_datetime(v):
-    return datetime.datetime.strptime(v, "%Y-%m-%d %H:%M:%S %Z")
+    try:
+        return datetime.datetime.strptime(v, "%Y-%m-%d %H:%M:%S %Z")
+    except ValueError:
+        return datetime.datetime.fromtimestamp(0)
 
 
 def to_float(v):
