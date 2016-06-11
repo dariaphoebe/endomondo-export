@@ -194,7 +194,8 @@ class Endomondo:
             if r.status_code == requests.codes.ok:
                 retry = False
 
-            elif r.status_code == requests.codes.forbidden \
+# for spurious BAD GATEWAY, just retry anyway
+            elif r.status_code == requests.codes.forbidden or r.status_code == 504 \
                  and self.delay < self.max_delay:
                      self.delay = max(1, min(self.delay * 2, self.max_delay))
 
